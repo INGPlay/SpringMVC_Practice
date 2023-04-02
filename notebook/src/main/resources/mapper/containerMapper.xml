@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.my.notebook.mapper.ContainerMapper">
+
+    <select id="selectAll" resultType="ContainerDTO">
+        SELECT * FROM container_tbl
+            order by c_title
+    </select>
+
+    <select id="selectById" resultType="ContainerDTO">
+        SELECT * FROM container_tbl where c_id = ${id}
+    </select>
+
+    <insert id="insertContainer">
+        insert into container_tbl (c_id, c_title)
+        values (c_id_seq.nextval, #{title})
+    </insert>
+
+    <delete id="deleteContainerById">
+        delete from container_tbl where c_id = ${id}
+    </delete>
+
+    <update id="updateTitleById" parameterType="map">
+        UPDATE CONTAINER_TBL SET c_title = #{title}
+                             WHERE c_id = ${id}
+    </update>
+</mapper>

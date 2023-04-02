@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../static/css/bootstrap.min.css" rel="stylesheet">
+    <title>Container</title>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>
+        <button type="button">←</button>
+        Container
+    </h2>
+
+    <div class="row">
+
+        <div class="col-4">
+
+            <div class="list-group">
+                <button type="button" class="list-group-item list-group-item-action active" aria-current="true">
+                    The current button
+                </button>
+                <button type="button" class="list-group-item list-group-item-action">A second item</button>
+                <button type="button" class="list-group-item list-group-item-action">A third button item</button>
+                <button type="button" class="list-group-item list-group-item-action">A fourth button item</button>
+                <button type="button" class="list-group-item list-group-item-action" disabled>A disabled button item</button>
+
+                <form method="post">
+                    <div class="mb-3 d-flex justify-content-center">
+                        <button type="submit" class="btn btn btn-primary">Create Container</button>
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+
+        <div class="col-8">
+
+            <form method="post">
+
+                <div class="d-flex flex-row justify-content-end">
+                    <button type="submit" class="btn btn-primary mb-3">Update Post</button>
+                    <button type="submit" class="btn btn-danger mb-3">Delete Post</button>
+                </div>
+                <div class="mb-3">
+                    <textarea class="form-control" name="title" rows="1">제목</textarea>
+                </div>
+                <div class="mb-3">
+                    <textarea class="form-control" name="content" rows="17">내용</textarea>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
