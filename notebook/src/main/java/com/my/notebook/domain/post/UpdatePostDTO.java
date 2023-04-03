@@ -8,8 +8,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class UpdatePostDTO {
-    private Long containerId;
-    private Long id;
+    private long containerId;
+    private long id;
     private String title;
     private String content;
 }

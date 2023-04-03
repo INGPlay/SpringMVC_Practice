@@ -1,15 +1,17 @@
 package com.my.notebook.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter
+import java.util.Date;
+
 @Getter
+@Setter
 @NoArgsConstructor
-public class ContainerDTO {
+public class AccountDTO {
     private long a_id;
-    private long c_id;
-    private String c_title;
+    private String a_username;
+    private String a_password;
+    private Date a_created;
 }

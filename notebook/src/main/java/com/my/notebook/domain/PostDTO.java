@@ -10,6 +10,7 @@ import java.util.Date;
 @Getter
 @NoArgsConstructor
 public class PostDTO {
+    private long a_id;
     private long c_id;
     private long p_id;
     private String p_title;

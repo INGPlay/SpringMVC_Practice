@@ -1,20 +1,22 @@
 package com.my.notebook.mapper;
 
 import com.my.notebook.domain.ContainerDTO;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
+import com.my.notebook.domain.container.CreateContainerDTO;
+import com.my.notebook.domain.post.ListPostDTO;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
 @Mapper
 public interface ContainerMapper {
-    List<ContainerDTO> selectAll();
+    @Insert("insert into CONTAINER_TBL (a_id, c_id, c_title)\n" +
+            "VALUES (${accountId}, c_id_seq.nextval, #{containerTitle})")
+    void insertContainer(CreateContainerDTO createContainerDTO);
 
-    ContainerDTO selectById(Long id);
+    @Select("select * from container_tbl WHERE a_id = ${accountId}")
+    List<ContainerDTO> selectContainerByAccountId(long accountId);
 
-    void insertContainer(String title);
+    @Delete("delete from container_tbl where c_id = ${containerId}")
+    void deleteContainerByContainerId(long containerId);
 
-    void deleteContainerById(Long id);
-
-    void updateTitleById(@Param("id") Long id, @Param("title") String title);
 }

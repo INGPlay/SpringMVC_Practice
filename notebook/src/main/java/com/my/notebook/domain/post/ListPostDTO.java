@@ -4,11 +4,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
 @Setter
+@Getter
 @NoArgsConstructor
-public class InsertPostDTO {
+public class ListPostDTO {
+    private long accountId;
     private long containerId;
-    private String title;
-    private String content;
 }

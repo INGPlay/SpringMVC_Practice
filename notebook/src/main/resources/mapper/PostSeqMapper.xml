@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
-<mapper namespace="com.my.notebook.mapper.SeqMapper">
+<mapper namespace="com.my.notebook.mapper.seq.PostSeqMapper">
 
-    <select id="getContainerIdSeqCurrval" resultType="_long">
-        SELECT c_id_seq.currval FROM dual
+    <select id="getPostIdSeqCurrval" resultType="_long">
+        SELECT p_id_seq.currval FROM dual
     </select>
 
-    <select id="createContainerIdSeq">
-        CREATE SEQUENCE c_id_seq
+    <select id="createPostIdSeq">
+        CREATE SEQUENCE p_id_seq
             START WITH 1
             INCREMENT BY 1
             MINVALUE 1
             NOCYCLE
     </select>
 
-    <select id="dropContainerIdSeq">
+    <select id="dropPostIdSeq">
         BEGIN
-            EXECUTE IMMEDIATE 'DROP SEQUENCE ' || 'c_id_seq';
+            EXECUTE IMMEDIATE 'DROP SEQUENCE ' || 'p_id_seq';
         EXCEPTION
             WHEN OTHERS THEN
                 IF SQLCODE != -2289 THEN
