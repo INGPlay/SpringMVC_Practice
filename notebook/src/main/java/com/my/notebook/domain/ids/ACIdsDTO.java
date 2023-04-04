@@ -1,4 +1,4 @@
-package com.my.notebook.domain.post;
+package com.my.notebook.domain.ids;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,10 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UpdatePostDTO {
+public class ACIdsDTO {
     private long accountId;
     private long containerId;
-    private long postId;
-    private String postTitle;
-    private String postContent;
 }

@@ -1,12 +1,9 @@
 package com.my.notebook.service;
 
-import com.my.notebook.domain.AccountDTO;
-import com.my.notebook.domain.account.LoginDTO;
-import com.my.notebook.mapper.AccountMapper;
+import com.my.notebook.domain.ids.ACIdsDTO;
 import com.my.notebook.mapper.seq.AccountSeqMapper;
 import com.my.notebook.mapper.seq.ContainerSeqMapper;
 import com.my.notebook.mapper.seq.PostSeqMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,12 +22,12 @@ public class SeqService {
         return accountSeqMapper.getAccountIdSeqCurrval();
     }
 
-    public long getContainerIdSeqCurrval(){
-        return containerSeqMapper.getContainerIdSeqCurrval();
+    public long getContainerIdSeqCurrvalByAccountId(long accountId){
+        return containerSeqMapper.getContainerIdSeqCurrvalByAccountId(accountId);
     }
 
-    public long getPostIdSeqCurrval(){
-        return postSeqMapper.getPostIdSeqCurrval();
+    public long getPostIdSeqCurrval(ACIdsDTO acIdsDTO){
+        return postSeqMapper.getPostIdSeqCurrvalByACIds(acIdsDTO);
     }
 
 }

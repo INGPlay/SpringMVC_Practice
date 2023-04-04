@@ -19,8 +19,9 @@
         <div class="col-4">
 
             <div class="list-group">
-                <button type="button" class="list-group-item list-group-item-action active" aria-current="true">
-                    The current button
+                <button type="button" class="list-group-item list-group-item-action active" aria-current="true"
+                th:onclick="|location.href='@{/main}'|">
+                    Container List
                 </button>
 
                 <div th:each="container:${containers}">
@@ -47,20 +48,39 @@
 
         <div class="col-8">
 
-            <div class="mb-3 d-flex flex-row justify-content-end">
-                <button type="button" class="btn btn-primary">Create Post</button>
+            <div class="row" th:if="${!#strings.isEmpty(currentContainer)}">
 
-                <!-- containerId가 없다면 Delete Container 버튼을 없앰-->
-                <form th:if = "${!#strings.isEmpty(containerId)}" th:action="@{/main/deleteContainer}" method="post">
-                    <input type="hidden" name="containerId" th:value="${containerId}">
-                    <button type="submit" class="btn btn-danger">Delete Container</button>
-                </form>
+                <div class="col-8">
+                    <h3 th:text="${currentContainer.getC_title()}"></h3>
+                </div>
+
+                <div class="col-4">
+                    <div class="mb-3 d-flex flex-row justify-content-end">
+
+                        <form th:action="@{/post/createPost}" method="post">
+                            <input type="hidden" name="containerId" th:value="${currentContainer.c_id}">
+
+                            <button type="submit" class="btn btn-primary"
+                                    th:onclick="|location.href='@{/post/{containerId}(containerId=${currentContainer.c_id})}'|">Create Post</button>
+                        </form>
+
+                        <!-- containerId가 없다면 Delete Container 버튼을 없앰-->
+                        <form th:action="@{/main/deleteContainer}" method="post">
+                            <input type="hidden" name="containerId" th:value="${currentContainer.c_id}">
+                            <button type="submit" class="btn btn-danger">Delete Container</button>
+                        </form>
+
+                    </div>
+                </div>
+
 
             </div>
 
+
             <div th:each="post:${posts}">
                 <div class="mb-3 border border-3 rounded">
-                    <button type="button" class="list-group-item list-group-item-action">
+                    <button type="button" class="list-group-item list-group-item-action border-0"
+                            th:onclick="|location.href='@{/post/{containerId}/{postId}(containerId=${currentContainer.c_id}, postId=${post.p_id})}'|">
 
                         <h3 th:text="${post.p_title}">Title</h3>
 
@@ -69,13 +89,17 @@
                         <div class="mb-1" th:text="${post.p_content}">Content</div>
 
                     </button>
+                    <form th:action="@{/post/deletePost}" method="post" class="d-flex justify-content-end">
+                        <input type="hidden" name="containerId" th:value="${post.c_id}">
+                        <input type="hidden" name="postId" th:value="${post.p_id}">
+                        <button type="submit" class="btn btn-danger">Delete Post</button>
+                    </form>
+
                 </div>
             </div>
 
-
         </div>
     </div>
-
 
     <div class="col-sm-8">
         <div class="list-group">

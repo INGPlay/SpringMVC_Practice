@@ -21,7 +21,7 @@ CREATE TABLE container_tbl (
 	c_id number,
 	c_title varchar2(50) NOT NULL,
 	CONSTRAINT container_pk PRIMARY KEY (a_id, c_id),
-	CONSTRAINT container_fk FOREIGN KEY (a_id) REFERENCES account_tbl (a_id) ON DELETE CASCADE,
+	CONSTRAINT container_fk FOREIGN KEY (a_id) REFERENCES account_tbl (a_id) ON DELETE CASCADE
 );
 
 CREATE TABLE post_tbl (
@@ -33,24 +33,62 @@ CREATE TABLE post_tbl (
 	p_created date NOT NULL,
 	p_updated date NOT NULL,
 	CONSTRAINT post_pk PRIMARY KEY (a_id, c_id, p_id),
-	CONSTRAINT post_fk FOREIGN KEY (a_id, c_id) REFERENCES container_tbl (a_id, c_id) ON DELETE CASCADE,
-	
+	CONSTRAINT post_fk FOREIGN KEY (a_id, c_id) REFERENCES container_tbl (a_id, c_id) ON DELETE CASCADE
 );
 --
+
+-- table 삭제
 DROP table account_TBL;
 DROP table CONTAINER_TBL ;
 DROP TABLE POST_TBL ;
--- table 삭제
-DELETE FROM ACCOUNT_TBL ct;
-
 --
-SELECT * from container_tbl where c_id = 3;
+
+-- table 내용 삭제
+DELETE FROM ACCOUNT_TBL;
+DELETE FROM CONTAINER_TBL;
+--
+
+-- table 고유값을 위한 시퀀스 테이블 (유사 시퀀스)
+CREATE TABLE CONTAINER_seq_tbl(
+	a_id NUMBER,
+	c_id_seq NUMBER NOT NULL,
+	CONSTRAINT container_seq_pk PRIMARY KEY (a_id),
+	CONSTRAINT container_seq_fk FOREIGN KEY (a_id) REFERENCES account_tbl (a_id) ON DELETE CASCADE
+);
+
+CREATE TABLE POST_seq_tbl(
+	a_id NUMBER,
+	c_id NUMBER,
+	p_id_seq NUMBER NOT NULL,
+	CONSTRAINT post_seq_pk PRIMARY KEY (a_id, c_id),
+	CONSTRAINT post_seq_fk FOREIGN KEY (a_id, c_id) REFERENCES container_tbl (a_id, c_id) ON DELETE CASCADE
+);
+
+DROP TABLE CONTAINER_seq_TBL ;
+DROP TABLE post_seq_tbl;
+--
+
+SELECT * FROM post_seq_tbl;
+
+UPDATE POST_seq_tbl SET p_id_seq = p_id_seq + 1 WHERE a_id = 1 and c_id = 3;
+
+UPDATE POST_seq_tbl SET p_id_seq = p_id_seq + 1 WHERE a_id = 1 and c_id = 1;
+
+SELECT * from account_tbl;
+select C_id_seq from CONTAINER_seq_tbl;
+
+INSERT into container_seq_tbl (a_id, c_id_seq)
+VALUES (2, 1);
+
+UPDATE CONTAINER_seq_tbl SET c_id_seq = c_id_seq + 1
+WHERE a_id = 1;
+
+-- 시퀀스 테이블 삭제
+DROP TABLE CONTAINER_SEQ_TBL ;
+DROP TABLE post_seq_tbl;
+--
+
 -- Sequence 생성 및 삭제
-CREATE SEQUENCE a_id_seq  
-    START WITH 1 
-    INCREMENT BY 1 
-    MINVALUE 1   
-    NOCYCLE;
  
 BEGIN
   EXECUTE IMMEDIATE 'DROP SEQUENCE ' || 'a_id_seq';
@@ -61,23 +99,16 @@ EXCEPTION
     END IF;
 END;
 
-
-CREATE SEQUENCE c_id_seq  
+CREATE SEQUENCE a_id_seq  
     START WITH 1 
     INCREMENT BY 1 
     MINVALUE 1   
     NOCYCLE;
-   
-   
-CREATE SEQUENCE p_id_seq  
-    START WITH 1 
-    INCREMENT BY 1 
-    MINVALUE 1   
-    NOCYCLE;
-
 --
 select * from container_tbl WHERE a_id = 7;
 SELECT * FROM post_tbl;
+
+SELECT nvl(max(c_id),0)+1 from container_tbl WHERE c_id = 1;
 
 insert into post_tbl(a_id, c_id, p_id, p_title, p_content, p_created, p_updated)
 VALUES (7,
@@ -88,7 +119,8 @@ VALUES (7,
         SYSDATE, 
         SYSDATE);
 -- 조회
-
+SELECT * FROM ACCOUNT_TBL at2 ;
+select * from container_tbl;
 insert into container_tbl (a_id, c_id, c_title)
 VALUES (7, (SELECT count(c_id) FROM CONTAINER_TBL), 'dd');
 

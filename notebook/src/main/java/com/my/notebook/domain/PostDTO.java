@@ -12,6 +12,7 @@ import java.util.Date;
 public class PostDTO {
     private long a_id;
     private long c_id;
+    private long c_title;
     private long p_id;
     private String p_title;
     private String p_content;

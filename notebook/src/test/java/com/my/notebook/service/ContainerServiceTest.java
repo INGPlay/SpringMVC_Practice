@@ -20,7 +20,7 @@ class ContainerServiceTest {
 
     @Test
     void listContainers() {
-        List<ContainerDTO> a = containerService.listContainerByAccountId(7);
+        List<ContainerDTO> a = containerService.selectContainersByAccountId(7);
 
         System.out.println("dddd" + a.size());
         System.out.println("dddd" + a);

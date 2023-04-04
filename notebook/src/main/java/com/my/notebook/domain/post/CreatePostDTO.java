@@ -7,8 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class InsertPostDTO {
+public class CreatePostDTO {
+    private long accountId;
     private long containerId;
-    private String title;
-    private String content;
+    private String postTitle;
+    private String postContent;
 }
