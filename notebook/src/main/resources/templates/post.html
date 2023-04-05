@@ -33,10 +33,15 @@
                     ></button>
                 </div>
 
-                <form method="post">
+                <form th:action="@{/post/createPost}" method="post">
+
+                    <input type="text" name="postTitle" class="list-group-item list-group-item-action">
+                    <input type="hidden" name="containerId" th:value="${currentPost.c_id}">
+
                     <div class="mb-3 d-flex justify-content-center">
-                        <button type="submit" class="btn btn btn-primary">Create Container</button>
+                        <button type="submit" class="btn btn btn-primary">Create Post</button>
                     </div>
+
                 </form>
 
             </div>

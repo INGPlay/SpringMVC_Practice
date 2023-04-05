@@ -8,7 +8,6 @@ import org.apache.ibatis.annotations.Update;
 
 @Mapper
 public interface PostSeqMapper {
-
     @Select("select p_id_seq from POST_seq_tbl where a_id = ${accountId} and c_id = ${containerId}")
     long getPostIdSeqCurrvalByACIds(ACIdsDTO acIdsDTO);
 

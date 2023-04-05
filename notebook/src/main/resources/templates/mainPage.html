@@ -4,16 +4,23 @@
     <meta charset="UTF-8">
     <link th:href="@{/css/bootstrap.min.css}"
           href="../static/css/bootstrap.min.css" rel="stylesheet">
-    <title>Container</title>
+    <title>Main</title>
 </head>
 <body>
 
 <div class="container">
 
-    <h1>
-        <button type="button" th:onclick="|location.href='@{/login}'|">←</button>
-        Main
-    </h1>
+    <div>
+        <h1>
+            <!--Logout-->
+            <form th:action="@{/logout}" method="post">
+                <button type="submit">←</button>
+                Main
+            </form>
+        </h1>
+
+    </div>
+
 
     <div class="row">
         <div class="col-4">
@@ -58,6 +65,7 @@
                     <div class="mb-3 d-flex flex-row justify-content-end">
 
                         <form th:action="@{/post/createPost}" method="post">
+                            <input type="hidden" name="postTitle" value = "새 포스트">
                             <input type="hidden" name="containerId" th:value="${currentContainer.c_id}">
 
                             <button type="submit" class="btn btn-primary"

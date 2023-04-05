@@ -30,6 +30,13 @@
                 </div>
 
                 <div class="mb-3">
+                    <label for="passwordCheck" class="form-label">Password Check</label>
+                    <input type="password" class="form-control" id="passwordCheck" name = "passwordCheck">
+                    <div class="form-text">비밀번호 확인</div>
+                </div>
+
+
+                <div class="mb-3">
                     <button type="submit" class="btn btn-primary">Register</button>
                     <button type="button" class="btn btn btn-success"
                             th:onclick="|location.href='@{/login}'|">Login Page</button>

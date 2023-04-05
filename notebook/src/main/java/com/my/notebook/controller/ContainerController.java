@@ -1,5 +1,6 @@
 package com.my.notebook.controller;
 
+import com.my.notebook.config.CustomUser;
 import com.my.notebook.domain.ContainerDTO;
 import com.my.notebook.domain.PostDTO;
 import com.my.notebook.domain.ids.ACIdsDTO;
@@ -9,6 +10,7 @@ import com.my.notebook.service.PostService;
 import com.my.notebook.service.SeqService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -34,8 +36,10 @@ public class ContainerController {
     // Mapping 함수 시작
     
     @GetMapping
-    public String mainPage(Model model) {
-        List<ContainerDTO> containers = containerService.selectContainersByAccountId(1);
+    public String mainPage(@AuthenticationPrincipal CustomUser user,
+                           Model model) {
+        long accountId = user.getAccountId();
+        List<ContainerDTO> containers = containerService.selectContainersByAccountId(accountId);
 
         model.addAttribute("containers", containers);
 
@@ -43,13 +47,15 @@ public class ContainerController {
     }
 
     @GetMapping("/{containerId}")
-    public String mainPage(@PathVariable long containerId, Model model) {
-        long tempAccountId = 1L;
+    public String mainPage(@PathVariable long containerId,
+                           @AuthenticationPrincipal CustomUser user,
+                           Model model) {
+        long accountId = user.getAccountId();
 
-        List<ContainerDTO> containers = containerService.selectContainersByAccountId(tempAccountId);
+        List<ContainerDTO> containers = containerService.selectContainersByAccountId(accountId);
 
         ACIdsDTO acIdsDTO = new ACIdsDTO();
-        acIdsDTO.setAccountId(tempAccountId);
+        acIdsDTO.setAccountId(accountId);
         acIdsDTO.setContainerId(containerId);
 
         List<PostDTO> posts = postService.selectPostsByACIds(acIdsDTO);
@@ -63,29 +69,34 @@ public class ContainerController {
     }
 
     @PostMapping({"", "/{containerId}"})
-    public String createContainer(@ModelAttribute("containerTitle") String containerTitle){
-        long tempAccountId = 1L;
+    public String createContainer(@ModelAttribute("containerTitle") String containerTitle,
+                                  @AuthenticationPrincipal CustomUser user){
+        long accountId = user.getAccountId();
 
         CreateContainerDTO createContainerDTO = new CreateContainerDTO();
-        createContainerDTO.setAccountId(tempAccountId);
+        createContainerDTO.setAccountId(accountId);
         createContainerDTO.setContainerTitle(containerTitle);
 
         // 생성된 컨테이너 페이지로 이동
-        long currval = seqService.getContainerIdSeqCurrvalByAccountId(tempAccountId);
-
         boolean isCreated = containerService.createContainer(createContainerDTO);
-        log.info("isCreated : " + isCreated);
-        log.info(containerTitle);
+        log.info("accountId : {}", accountId);
+        long createdContainerId = seqService.getContainerIdSeqCurrvalByAccountId(accountId) - 1;
 
-        return "redirect:/main/" + currval;
+        log.info("isCreated : " + isCreated);
+
+        if (createdContainerId <= 0){
+            return "redirect:/main/" + createdContainerId;
+        }
+        return "redirect:/main/" + createdContainerId;
     }
 
     @PostMapping("/deleteContainer")
-    public String deleteContainer(@ModelAttribute("containerId") long containerId){
-        long tempAccountId = 1L;
+    public String deleteContainer(@ModelAttribute("containerId") long containerId,
+                                  @AuthenticationPrincipal CustomUser user){
+        long accountId = user.getAccountId();
 
         ACIdsDTO acIdsDTO = new ACIdsDTO();
-        acIdsDTO.setAccountId(tempAccountId);
+        acIdsDTO.setAccountId(accountId);
         acIdsDTO.setContainerId(containerId);
 
         containerService.deleteContainer(acIdsDTO);

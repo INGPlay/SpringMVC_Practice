@@ -1,5 +1,6 @@
 package com.my.notebook.controller;
 
+import com.my.notebook.config.CustomUser;
 import com.my.notebook.domain.PostDTO;
 import com.my.notebook.domain.ids.ACIdsDTO;
 import com.my.notebook.domain.ids.ACPIdsDTO;
@@ -8,6 +9,7 @@ import com.my.notebook.domain.post.UpdatePostDTO;
 import com.my.notebook.service.PostService;
 import com.my.notebook.service.SeqService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -33,9 +35,10 @@ public class PostController {
     }
 
     @GetMapping("/{containerId}")
-    public String createPostForm(@PathVariable long containerId, Model model){
+    public String createPostForm(@AuthenticationPrincipal CustomUser user,
+                                 @PathVariable long containerId, Model model){
         ACIdsDTO acIdsDTO = new ACIdsDTO();
-        acIdsDTO.setAccountId(1);
+        acIdsDTO.setAccountId(user.getAccountId());
         acIdsDTO.setContainerId(containerId);
         List<PostDTO> posts = postService.selectPostsByACIds(acIdsDTO);
 
@@ -45,9 +48,9 @@ public class PostController {
     }
 
     @PostMapping("/createPost")
-    public String createPost(@ModelAttribute CreatePostDTO createPostDTO){
-        createPostDTO.setAccountId(1);
-        createPostDTO.setPostTitle(" ");
+    public String createPost(@AuthenticationPrincipal CustomUser user,
+                             @ModelAttribute CreatePostDTO createPostDTO){
+        createPostDTO.setAccountId(user.getAccountId());
         createPostDTO.setPostContent(" ");
 
         log.info(String.valueOf(createPostDTO.getAccountId()));
@@ -67,8 +70,9 @@ public class PostController {
     }
 
     @PostMapping("/updatePost")
-    public String updatePost(@ModelAttribute UpdatePostDTO updatePostDTO){
-        updatePostDTO.setAccountId(1);
+    public String updatePost(@AuthenticationPrincipal CustomUser user,
+                             @ModelAttribute UpdatePostDTO updatePostDTO){
+        updatePostDTO.setAccountId(user.getAccountId());
         postService.updatePostByUpdatePostDTO(updatePostDTO);
 
         log.info("포스트 수정");
@@ -76,32 +80,37 @@ public class PostController {
     }
 
     @PostMapping("/deletePost")
-    public String deletePost(@ModelAttribute ACPIdsDTO acpIdsDTO){
-        acpIdsDTO.setAccountId(1);
+    public String deletePost(@AuthenticationPrincipal CustomUser user,
+                             @ModelAttribute ACPIdsDTO acpIdsDTO){
+        acpIdsDTO.setAccountId(user.getAccountId());
         postService.deletePostByACPIdsDTO(acpIdsDTO);
 
         return "redirect:/main/" + acpIdsDTO.getContainerId();
     }
 
     @GetMapping("/{containerId}/{postId}")
-    public String postPage(@ModelAttribute("containerId") long containerId,
+    public String postPage(@AuthenticationPrincipal CustomUser user,
+                           @ModelAttribute("containerId") long containerId,
                            @ModelAttribute("postId") long postId,
                            Model model){
+
+        long accountId = user.getAccountId();
+
         ACIdsDTO acIdsDTO = new ACIdsDTO();
-        acIdsDTO.setAccountId(1);
+        acIdsDTO.setAccountId(accountId);
         acIdsDTO.setContainerId(containerId);
         List<PostDTO> posts = postService.selectPostsByACIds(acIdsDTO);
 
         //temp
 
         ACPIdsDTO acpIdsDTO = new ACPIdsDTO();
-        acpIdsDTO.setAccountId(1);
+        acpIdsDTO.setAccountId(accountId);
         acpIdsDTO.setContainerId(containerId);
         acpIdsDTO.setPostId(postId);
 
-        PostDTO post = postService.selectPostByACPIds(acpIdsDTO);
+        PostDTO currentPost = postService.selectPostByACPIds(acpIdsDTO);
 
-        model.addAttribute("currentPost", post);
+        model.addAttribute("currentPost", currentPost);
         model.addAttribute("posts", posts);
         model.addAttribute("acpIds", acpIdsDTO);
 
