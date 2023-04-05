@@ -28,17 +28,7 @@ public class CustomUserDetailService implements UserDetailsService {
                 ()-> new UsernameNotFoundException("없는 회원입니다.")
         );
 
-
-
-        Collection authorities = new ArrayList<>();
-
-        if (account.getA_isAdmin().equals("1")){
-            authorities.add(new SimpleGrantedAuthority("ADMIN"));
-        } else if (account.getA_isAdmin().equals("0")) {
-            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-        } else {
-            System.out.println("---------------예외 상황----------------");
-        }
+        Collection authorities = getAuthorities(account);
 
         CustomUser user = new CustomUser(
                 account.getA_username(),
@@ -48,5 +38,18 @@ public class CustomUserDetailService implements UserDetailsService {
         );
 
         return user;
+    }
+
+    private static Collection getAuthorities(EncodedAccountDTO account) {
+        Collection authorities = new ArrayList<>();
+
+        if (account.getA_isAdmin().equals("1")){
+            authorities.add(new SimpleGrantedAuthority("ADMIN"));
+        } else if (account.getA_isAdmin().equals("0")) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        } else {
+            System.out.println("---------------예외 상황----------------");
+        }
+        return authorities;
     }
 }
