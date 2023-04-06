@@ -14,6 +14,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -70,7 +71,8 @@ public class ContainerController {
 
     @PostMapping({"", "/{containerId}"})
     public String createContainer(@ModelAttribute("containerTitle") String containerTitle,
-                                  @AuthenticationPrincipal CustomUser user){
+                                  @AuthenticationPrincipal CustomUser user,
+                                  RedirectAttributes redirectAttributes){
         long accountId = user.getAccountId();
 
         CreateContainerDTO createContainerDTO = new CreateContainerDTO();
@@ -79,10 +81,15 @@ public class ContainerController {
 
         // 생성된 컨테이너 페이지로 이동
         boolean isCreated = containerService.createContainer(createContainerDTO);
-        log.info("accountId : {}", accountId);
-        long createdContainerId = seqService.getContainerIdSeqCurrvalByAccountId(accountId) - 1;
 
-        log.info("isCreated : " + isCreated);
+        redirectAttributes.addAttribute("isCreated", isCreated);
+
+        if (!isCreated){
+            return "redirect:/main";
+        }
+
+        // 같은 계정에서 동시에 컨테이너 생성할 시 문제가 생길 수도 있을 수 있는 코드인 것 같다
+        long createdContainerId = seqService.getContainerIdSeqCurrvalByAccountId(accountId) - 1;
 
         if (createdContainerId <= 0){
             return "redirect:/main/" + createdContainerId;

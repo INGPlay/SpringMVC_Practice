@@ -73,9 +73,14 @@ public class PostController {
     public String updatePost(@AuthenticationPrincipal CustomUser user,
                              @ModelAttribute UpdatePostDTO updatePostDTO){
         updatePostDTO.setAccountId(user.getAccountId());
-        postService.updatePostByUpdatePostDTO(updatePostDTO);
+        boolean isUpdate = postService.updatePostByUpdatePostDTO(updatePostDTO);
 
+        log.info("isUpdate : {}", isUpdate);
         log.info("포스트 수정");
+
+        if (!isUpdate){
+            return "redirect:/post/" + updatePostDTO.getContainerId() + "/" + updatePostDTO.getPostId();
+        }
         return "redirect:/main/" + updatePostDTO.getContainerId();
     }
 
@@ -102,7 +107,6 @@ public class PostController {
         List<PostDTO> posts = postService.selectPostsByACIds(acIdsDTO);
 
         //temp
-
         ACPIdsDTO acpIdsDTO = new ACPIdsDTO();
         acpIdsDTO.setAccountId(accountId);
         acpIdsDTO.setContainerId(containerId);

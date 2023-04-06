@@ -31,7 +31,7 @@ CREATE TABLE post_tbl (
 	a_id NUMBER,
 	c_id number,
 	p_id number,
-	p_title varchar2(100) NOT NULL,
+	p_title varchar2(50) NOT NULL,
 	p_content varchar2(1000) NOT NULL,
 	p_created date NOT NULL,
 	p_updated date NOT NULL,

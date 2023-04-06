@@ -7,11 +7,13 @@ import com.my.notebook.domain.post.CreatePostDTO;
 import com.my.notebook.domain.post.UpdatePostDTO;
 import com.my.notebook.mapper.PostMapper;
 import com.my.notebook.mapper.seq.PostSeqMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Slf4j
 public class PostService {
     private final PostMapper postMapper;
     private final PostSeqMapper postSeqMapper;
@@ -30,6 +32,10 @@ public class PostService {
     }
 
     public boolean createPostByCreatePostDTO(CreatePostDTO createPostDTO){
+        if (isAcceptedPost(createPostDTO.getPostTitle(), createPostDTO.getPostContent())) {
+            return false;
+        }
+
         try {
             postMapper.insertPostByCreatePostDTO(createPostDTO);
 
@@ -47,8 +53,30 @@ public class PostService {
         return true;
     }
 
-    public void updatePostByUpdatePostDTO(UpdatePostDTO updatePostDTO){
-        postMapper.updatePost(updatePostDTO);
+    public boolean updatePostByUpdatePostDTO(UpdatePostDTO updatePostDTO){
+        if (isAcceptedPost(updatePostDTO.getPostTitle(), updatePostDTO.getPostContent())) {
+            return false;
+        }
+
+        try {
+            postMapper.updatePost(updatePostDTO);
+        } catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+    private static boolean isAcceptedPost(String postTitle, String postContent) {
+        if (postTitle.length() > 50) {
+            log.info("PostTitle이 김");
+            return true;
+        } else if (postContent.length() > 1000) {
+            log.info("PostContent가 김");
+            return true;
+        }
+        return false;
     }
 
     public void deletePostByACPIdsDTO(ACPIdsDTO acpIdsDTO){

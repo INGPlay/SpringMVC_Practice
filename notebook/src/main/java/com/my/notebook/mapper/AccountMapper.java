@@ -19,13 +19,7 @@ public interface AccountMapper {
     AccountDTO selectById(long id);
 
     @Select("select * from account_tbl where a_username = #{username}")
-    AccountDTO selectByUsername(String username);
-
-    @Select("select * from account_tbl where a_username = #{username}")
     EncodedAccountDTO selectEncodedAccountByUsername(String username);
-
-    @Select("select * from account_tbl where a_username = #{username} and a_password = #{password}")
-    AccountDTO login(LoginDTO loginDTO);
 
     @Insert("insert into account_tbl(a_id, a_username, a_password, a_encodedPassword, a_isAdmin, a_created)" +
             "VALUES (a_id_seq.nextval, #{username}, #{password}, #{encodedPassword}, '1', sysdate)")

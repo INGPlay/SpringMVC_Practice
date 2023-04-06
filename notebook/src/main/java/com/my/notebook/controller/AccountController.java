@@ -2,16 +2,14 @@ package com.my.notebook.controller;
 
 import com.my.notebook.domain.AccountDTO;
 import com.my.notebook.domain.account.LoginDTO;
+import com.my.notebook.domain.account.RegisterDTO;
 import com.my.notebook.service.AccountService;
 import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Slf4j
 @Controller
@@ -26,12 +24,11 @@ public class AccountController {
 
     @GetMapping
     public String loginPage(){
-
         return "login/loginForm";
     }
 
     @GetMapping("/register")
-    public String registerPage(){
+    public String registerPage(@RequestParam(required = false) String registerMessage){
         return "login/registerForm";
     }
 
@@ -39,21 +36,21 @@ public class AccountController {
     public String register(@ModelAttribute("username") String username,
                            @ModelAttribute("password") String password,
                            @ModelAttribute("passwordCheck") String passwordCheck,
-                           Model model){
+                           RedirectAttributes redirectAttributes){
 
-        if (!passwordCheck.equals(password)){
-            return "redirect:/login/register";
-        }
+        RegisterDTO registerDTO = new RegisterDTO();
+        registerDTO.setUsername(username);
+        registerDTO.setPassword(password);
+        registerDTO.setPasswordCheck(passwordCheck);
+        String registerMessage = accountService.register(registerDTO);
 
-        LoginDTO loginDTO = new LoginDTO();
-        loginDTO.setUsername(username);
-        loginDTO.setPassword(password);
-        boolean isRegistered = accountService.register(loginDTO);
+        log.info(registerMessage);
+        // 쿼리 스트링 추가
+        redirectAttributes.addAttribute("registerMessage", registerMessage);
 
-        if (isRegistered){
+        if (registerMessage.equals("ok")){
             return "redirect:/login";
         } else {
-            model.addAttribute("isRegistered", isRegistered);
             return "redirect:/login/register";
         }
     }

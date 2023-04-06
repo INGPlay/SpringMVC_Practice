@@ -13,6 +13,11 @@
     </h1>
 
     <div class="row justify-content-center">
+
+        <h4 class="row justify-content-center text-danger"
+            th:if="${!#strings.isEmpty(param.registerMessage)}" th:text="${param.registerMessage}">
+        </h4>
+
         <div class="col-4">
 
             <form th:action method="post">

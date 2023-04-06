@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Service
 public class ContainerService {
@@ -35,6 +36,12 @@ public class ContainerService {
     }
 
     public boolean createContainer(CreateContainerDTO createContainerDTO){
+        
+        // 글자 수 제한
+        if (createContainerDTO.getContainerTitle().length() > 50){
+            return false;
+        }
+
         try {
             long accountId = createContainerDTO.getAccountId();
             long containerId = containerSeqMapper.getContainerIdSeqCurrvalByAccountId(accountId);

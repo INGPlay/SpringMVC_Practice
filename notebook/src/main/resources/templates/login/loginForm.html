@@ -12,6 +12,14 @@
         Login Page
     </h1>
 
+    <h4 class="row justify-content-center text-success"
+        th:if="${!#strings.isEmpty(param.registerMessage)}" th:text="${param.registerMessage}">
+    </h4>
+    <h4 class="row justify-content-center text-warning"
+        th:if="${param.error}" >
+        가입되지 않은 계정이거나 비밀번호가 틀렸습니다.
+    </h4>
+
     <div class="row justify-content-center">
         <div class="col-4">
 
