@@ -1,13 +1,14 @@
 package com.my.notebook.controller;
 
-import com.my.notebook.domain.AccountDTO;
 import com.my.notebook.domain.account.LoginDTO;
-import com.my.notebook.domain.account.RegisterDTO;
+import com.my.notebook.domain.account.RegisterForm;
 import com.my.notebook.service.AccountService;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -23,35 +24,48 @@ public class AccountController {
     }
 
     @GetMapping
-    public String loginPage(){
+    public String loginPage(Model model){
+        model.addAttribute("loginForm", new LoginDTO("", ""));
         return "login/loginForm";
     }
 
     @GetMapping("/register")
-    public String registerPage(@RequestParam(required = false) String registerMessage){
+    public String registerPage(Model model){
+
+        model.addAttribute("registerForm", new RegisterForm("", "", ""));
+
         return "login/registerForm";
     }
 
     @PostMapping("/register")
-    public String register(@ModelAttribute("username") String username,
-                           @ModelAttribute("password") String password,
-                           @ModelAttribute("passwordCheck") String passwordCheck,
+    public String register(@Validated @ModelAttribute("registerForm") RegisterForm registerForm,
+                           BindingResult bindingResult,
                            RedirectAttributes redirectAttributes){
+        log.info("errors = {}", bindingResult);
 
-        RegisterDTO registerDTO = new RegisterDTO();
-        registerDTO.setUsername(username);
-        registerDTO.setPassword(password);
-        registerDTO.setPasswordCheck(passwordCheck);
-        String registerMessage = accountService.register(registerDTO);
+        // Validation
+        if (!registerForm.getPassword().equals(registerForm.getPasswordCheck())){
+            bindingResult.reject("passwordCheck", null, "비밀번호 확인이 맞지 않습니다.");
+            return "login/registerForm";
+        }
 
-        log.info(registerMessage);
+        if (bindingResult.hasErrors()){
+            return "login/registerForm";
+        }
+
+        // Service
+        LoginDTO loginDTO = new LoginDTO(registerForm.getUsername(), registerForm.getPassword());
+        String registerMessage = accountService.register(loginDTO);
+
+        // Looting
         // 쿼리 스트링 추가
         redirectAttributes.addAttribute("registerMessage", registerMessage);
 
         if (registerMessage.equals("ok")){
             return "redirect:/login";
         } else {
-            return "redirect:/login/register";
+            bindingResult.reject("serviceError", null, registerMessage);
+            return "login/registerForm";
         }
     }
 }

@@ -14,30 +14,36 @@
 
     <div class="row justify-content-center">
 
-        <h4 class="row justify-content-center text-danger"
-            th:if="${!#strings.isEmpty(param.registerMessage)}" th:text="${param.registerMessage}">
-        </h4>
-
         <div class="col-4">
 
-            <form th:action method="post">
+            <form th:action method="post" th:object="${registerForm}">
+
+                <div th:if="${#fields.hasGlobalErrors()}">
+                    <p class="text-danger" th:each="e : ${#fields.globalErrors()}" th:text="${e}"></p>
+                </div>
 
                 <div class="mb-3">
                     <label for="username" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="username" name = "username" aria-describedby="username">
-                    <div class="form-text">아이디를 입력하세요</div>
+                    <input type="text" class="form-control" id="username" name = "username" aria-describedby="username"
+                           th:field="*{username}" th:errorclass="border-danger">
+
+                    <div class="form-text" th:errors="*{username}" >아이디를 입력하세요</div>
                 </div>
 
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" name = "password">
-                    <div class="form-text">비밀번호를 입력하세요</div>
+                    <input type="password" class="form-control" id="password" name = "password"
+                           th:field="*{password}" th:errorclass="border-danger">
+
+                    <div class="form-text" th:errors="*{password}">비밀번호를 입력하세요</div>
                 </div>
 
                 <div class="mb-3">
                     <label for="passwordCheck" class="form-label">Password Check</label>
-                    <input type="password" class="form-control" id="passwordCheck" name = "passwordCheck">
-                    <div class="form-text">비밀번호 확인</div>
+                    <input type="password" class="form-control" id="passwordCheck" name = "passwordCheck"
+                           th:field="*{passwordCheck}" th:errorclass="border-danger">
+
+                    <div class="form-text" th:errors="*{passwordCheck}">비밀번호 확인</div>
                 </div>
 
 
