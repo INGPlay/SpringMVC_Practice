@@ -1,5 +1,6 @@
 package com.my.notebook.service;
 
+import com.my.notebook.domain.ContainerDTO;
 import com.my.notebook.domain.PostDTO;
 import com.my.notebook.domain.ids.ACIdsDTO;
 import com.my.notebook.domain.ids.ACPIdsDTO;
@@ -9,6 +10,7 @@ import com.my.notebook.mapper.PostMapper;
 import com.my.notebook.mapper.seq.PostSeqMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import java.util.List;
 
@@ -40,9 +42,7 @@ public class PostService {
             postMapper.insertPostByCreatePostDTO(createPostDTO);
 
             // 시퀀스 업데이트
-            ACIdsDTO acIdsDTO = new ACIdsDTO();
-            acIdsDTO.setAccountId(createPostDTO.getAccountId());
-            acIdsDTO.setContainerId(createPostDTO.getContainerId());
+            ACIdsDTO acIdsDTO = new ACIdsDTO(createPostDTO.getAccountId(), createPostDTO.getContainerId());
             postSeqMapper.updatePostIdSeqNextvalByACIds(acIdsDTO);
 
         } catch (Exception e){
@@ -82,4 +82,5 @@ public class PostService {
     public void deletePostByACPIdsDTO(ACPIdsDTO acpIdsDTO){
         postMapper.deletePost(acpIdsDTO);
     }
+
 }

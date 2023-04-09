@@ -24,13 +24,11 @@ import java.util.List;
 public class ContainerController {
 
     private final ContainerService containerService;
-    private final PostService postService;
     private final SeqService seqService;
 
     @Autowired
-    public ContainerController(ContainerService containerService, PostService postService, SeqService seqService) {
+    public ContainerController(ContainerService containerService, SeqService seqService) {
         this.containerService = containerService;
-        this.postService = postService;
         this.seqService = seqService;
     }
 
@@ -51,20 +49,9 @@ public class ContainerController {
     public String mainPage(@PathVariable long containerId,
                            @AuthenticationPrincipal CustomUser user,
                            Model model) {
-        long accountId = user.getAccountId();
 
-        List<ContainerDTO> containers = containerService.selectContainersByAccountId(accountId);
-
-        ACIdsDTO acIdsDTO = new ACIdsDTO();
-        acIdsDTO.setAccountId(accountId);
-        acIdsDTO.setContainerId(containerId);
-
-        List<PostDTO> posts = postService.selectPostsByACIds(acIdsDTO);
-        ContainerDTO currentContainer = containerService.getContainerByContainerId(acIdsDTO);
-
-        model.addAttribute("containers", containers);
-        model.addAttribute("posts", posts);
-        model.addAttribute("currentContainer", currentContainer);
+        ACIdsDTO acIdsDTO = new ACIdsDTO(user.getAccountId(), containerId);
+        containerService.setMainPage(acIdsDTO, model);
 
         return "mainPage";
     }
@@ -100,12 +87,8 @@ public class ContainerController {
     @PostMapping("/deleteContainer")
     public String deleteContainer(@ModelAttribute("containerId") long containerId,
                                   @AuthenticationPrincipal CustomUser user){
-        long accountId = user.getAccountId();
 
-        ACIdsDTO acIdsDTO = new ACIdsDTO();
-        acIdsDTO.setAccountId(accountId);
-        acIdsDTO.setContainerId(containerId);
-
+        ACIdsDTO acIdsDTO = new ACIdsDTO(user.getAccountId(), containerId);
         containerService.deleteContainer(acIdsDTO);
 
         return "redirect:/main";

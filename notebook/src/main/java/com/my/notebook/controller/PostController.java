@@ -37,9 +37,7 @@ public class PostController {
     @GetMapping("/{containerId}")
     public String createPostForm(@AuthenticationPrincipal CustomUser user,
                                  @PathVariable long containerId, Model model){
-        ACIdsDTO acIdsDTO = new ACIdsDTO();
-        acIdsDTO.setAccountId(user.getAccountId());
-        acIdsDTO.setContainerId(containerId);
+        ACIdsDTO acIdsDTO = new ACIdsDTO(user.getAccountId(), containerId);
         List<PostDTO> posts = postService.selectPostsByACIds(acIdsDTO);
 
         model.addAttribute("posts", posts);
@@ -58,9 +56,7 @@ public class PostController {
         log.info(createPostDTO.getPostTitle());
         log.info(createPostDTO.getPostContent());
 
-        ACIdsDTO acIdsDTO = new ACIdsDTO();
-        acIdsDTO.setAccountId(createPostDTO.getAccountId());
-        acIdsDTO.setContainerId(createPostDTO.getContainerId());
+        ACIdsDTO acIdsDTO = new ACIdsDTO(createPostDTO.getAccountId(), createPostDTO.getContainerId());
         long postId = seqService.getPostIdSeqCurrval(acIdsDTO);
 
         boolean isCreated = postService.createPostByCreatePostDTO(createPostDTO);
@@ -101,12 +97,9 @@ public class PostController {
 
         long accountId = user.getAccountId();
 
-        ACIdsDTO acIdsDTO = new ACIdsDTO();
-        acIdsDTO.setAccountId(accountId);
-        acIdsDTO.setContainerId(containerId);
+        ACIdsDTO acIdsDTO = new ACIdsDTO(accountId, containerId);
         List<PostDTO> posts = postService.selectPostsByACIds(acIdsDTO);
 
-        //temp
         ACPIdsDTO acpIdsDTO = new ACPIdsDTO();
         acpIdsDTO.setAccountId(accountId);
         acpIdsDTO.setContainerId(containerId);

@@ -6,8 +6,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 public class ACIdsDTO {
     private long accountId;
     private long containerId;
+
+    public ACIdsDTO(long accountId, long containerId) {
+        this.accountId = accountId;
+        this.containerId = containerId;
+    }
 }
