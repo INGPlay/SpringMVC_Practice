@@ -4,6 +4,7 @@ import com.my.notebook.domain.PostDTO;
 import com.my.notebook.domain.ids.ACIdsDTO;
 import com.my.notebook.domain.ids.ACPIdsDTO;
 import com.my.notebook.domain.post.CreatePostDTO;
+import com.my.notebook.domain.post.UpdatePostForm;
 import com.my.notebook.domain.post.UpdatePostDTO;
 import org.apache.ibatis.annotations.*;
 
@@ -27,7 +28,7 @@ public interface PostMapper {
             "sysdate, " +
             "sysdate" +
             ")")
-    void insertPostByCreatePostDTO(CreatePostDTO CreatePostDTO);
+    void insertPostByCreatePostDTO(CreatePostDTO createPostDTO);
 
     @Update("update post_tbl set " +
             "p_title = #{postTitle}, p_content = #{postContent}" +

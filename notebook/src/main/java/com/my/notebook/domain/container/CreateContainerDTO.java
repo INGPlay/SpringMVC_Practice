@@ -6,8 +6,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 public class CreateContainerDTO {
     private long accountId;
     private String containerTitle;
+
+    public CreateContainerDTO(long accountId, String containerTitle) {
+        this.accountId = accountId;
+        this.containerTitle = containerTitle;
+    }
 }

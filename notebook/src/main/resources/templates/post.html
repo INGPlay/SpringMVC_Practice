@@ -13,7 +13,7 @@
 
     <h1>
         <button type="button"
-                th:onclick="|location.href='@{/main/{containerId}(containerId=${acpIds.containerId})}'|">←</button>
+                th:onclick="|location.href='@{/main/{containerId}(containerId=${updatePostForm.containerId})}'|">←</button>
         Container
     </h1>
 
@@ -35,8 +35,9 @@
 
                 <form th:action="@{/post/createPost}" method="post">
 
-                    <input type="text" name="postTitle" class="list-group-item list-group-item-action">
-                    <input type="hidden" name="containerId" th:value="${currentPost.c_id}">
+                    <input type="hidden" name="postTitle" value="새 포스트">
+                    <input type="hidden" name="postContent" value=" ">
+                    <input type="hidden" name="containerId" th:value="${containerId}">
 
                     <div class="mb-3 d-flex justify-content-center">
                         <button type="submit" class="btn btn btn-primary">Create Post</button>
@@ -50,29 +51,29 @@
 
         <div class="col-8">
 
-            <form th:action="@{/post/updatePost}" method="post">
+            <div th:if="${not #strings.isEmpty(param.isCreatePost)}">
+                <div class="row justify-content-center text-success"
+                     th:if="${#strings.equals(param.isCreatePost, 'true')}" >
+                    포스트가 생성되었습니다.
+                </div>
+            </div>
 
-                <input type="hidden" name="containerId" th:value="${acpIds.containerId}">
-                <input type="hidden" name="postId" th:value="${acpIds.postId}">
+            <form th:action="@{/post/updatePost}" th:object="${updatePostForm}" method="post">
+
+                <input type="hidden" name="containerId" th:field="*{containerId}">
+                <input type="hidden" name="postId" th:value="*{postId}">
 
                 <div class="d-flex flex-row justify-content-end">
                     <button type="submit" class="btn btn-primary mb-3">Update Post</button>
                 </div>
 
-                <div class="mb-3">
-                    <textarea class="form-control" name="postTitle" rows="1"
-                              th:if="${!#strings.isEmpty(currentPost)}"
-                                th:text="${currentPost.p_title}">제목</textarea>
-                    <textarea class="form-control" name="postTitle" rows="1"
-                              th:unless="${!#strings.isEmpty(currentPost)}">제목</textarea>
-                </div>
-                <div class="mb-3">
-                    <textarea class="form-control" name="postContent" rows="17"
-                              th:if="${!#strings.isEmpty(currentPost)}"
-                                th:text="${currentPost.p_content}">내용</textarea>
-                    <textarea class="form-control" name="postContent" rows="17"
-                              th:unless="${!#strings.isEmpty(currentPost)}">내용</textarea>
-                </div>
+                <textarea class="form-control" name="postTitle" rows="1"
+                            th:text="*{postTitle}" th:errorclass="border-danger">제목</textarea>
+                <div class="mb-3 text-danger" th:errors="*{postTitle}"></div>
+
+                <textarea class="form-control" name="postContent" rows="17"
+                            th:text="*{postContent}" th:errorclass="border-danger">내용</textarea>
+                <div class="mb-3 text-danger" th:errors="*{postContent}"></div>
 
             </form>
 

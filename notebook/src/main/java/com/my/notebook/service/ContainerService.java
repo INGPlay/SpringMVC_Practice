@@ -41,11 +41,6 @@ public class ContainerService {
     }
 
     public boolean createContainer(CreateContainerDTO createContainerDTO){
-        
-        // 글자 수 제한
-        if (createContainerDTO.getContainerTitle().length() > 50){
-            return false;
-        }
 
         try {
             long accountId = createContainerDTO.getAccountId();
@@ -65,8 +60,14 @@ public class ContainerService {
         return true;
     }
 
-    public void deleteContainer(ACIdsDTO acIdsDTO){
-        containerMapper.deleteContainerByContainerId(acIdsDTO);
+    public boolean deleteContainer(ACIdsDTO acIdsDTO){
+        try {
+            containerMapper.deleteContainerByContainerId(acIdsDTO);
+            return true;
+
+        } catch (Exception e){
+            return false;
+        }
     }
 
     public void setMainPage(ACIdsDTO acIdsDTO, Model model){

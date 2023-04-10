@@ -38,13 +38,15 @@
                     ></button>
                 </div>
 
-                <form th:action method="post">
+                <form th:action method="post" th:object="${createContainerForm}">
 
-                    <input type="text" name="containerTitle" class="list-group-item list-group-item-action">
+                    <input type="text" name="containerTitle" class="list-group-item list-group-item-action" th:field="*{containerTitle}">
 
-                    <div class="mb-3 d-flex justify-content-center">
+                    <div class="d-flex justify-content-center">
                         <button type="submit" class="btn btn btn-primary">Create Container</button>
                     </div>
+
+                    <div class="d-flex justify-content-center text-warning" th:errors="*{containerTitle}">컨테이너 제목 확인</div>
 
                 </form>
 
@@ -65,8 +67,9 @@
                     <div class="mb-3 d-flex flex-row justify-content-end">
 
                         <form th:action="@{/post/createPost}" method="post">
-                            <input type="hidden" name="postTitle" value = "새 포스트">
                             <input type="hidden" name="containerId" th:value="${currentContainer.c_id}">
+                            <input type="hidden" name="postTitle" value="새 포스트">
+                            <input type="hidden" name="postContent" value=" ">
 
                             <button type="submit" class="btn btn-primary"
                                     th:onclick="|location.href='@{/post/{containerId}(containerId=${currentContainer.c_id})}'|">Create Post</button>
@@ -81,9 +84,54 @@
                     </div>
                 </div>
 
-
             </div>
 
+            <div th:if="${not #strings.isEmpty(param.isCreateContainer)}">
+                <div class="row justify-content-center text-success"
+                     th:if="${#strings.equals(param.isCreateContainer, 'true')}" >
+                    컨테이너가 생성되었습니다.
+                </div>
+                <div class="row justify-content-center text-danger"
+                     th:if="${#strings.equals(param.isCreateContainer, 'false')}" >
+                    컨테이너가 생성이 실패하였습니다.
+                </div>
+            </div>
+
+            <div th:if="${not #strings.isEmpty(param.isDeleteContainer)}">
+                <div class="row justify-content-center text-warning"
+                     th:if="${#strings.equals(param.isDeleteContainer, 'true')}" >
+                    컨테이너가 삭제되었습니다.
+                </div>
+                <div class="row justify-content-center text-danger"
+                     th:if="${#strings.equals(param.isDeleteContainer, 'false')}" >
+                    컨테이너가 삭제가 실패하였습니다.
+                </div>
+            </div>
+
+            <div th:if="${not #strings.isEmpty(param.isDeletePost)}">
+                <div class="row justify-content-center text-warning"
+                     th:if="${#strings.equals(param.isDeletePost, 'true')}" >
+                    포스트가 삭제되었습니다.
+                </div>
+                <div class="row justify-content-center text-danger"
+                     th:if="${#strings.equals(param.isDeletePost, 'false')}" >
+                    포스트가 삭제가 실패하였습니다.
+                </div>
+            </div>
+
+            <div th:if="${not #strings.isEmpty(param.isCreatePost)}">
+                <div class="row justify-content-center text-danger"
+                     th:if="${#strings.equals(param.isCreatePost, 'false')}" >
+                    포스트가 생성이 실패하였습니다.
+                </div>
+            </div>
+
+            <div th:if="${not #strings.isEmpty(param.isUpdatePost)}">
+                <div class="row justify-content-center text-success"
+                     th:if="${#strings.equals(param.isUpdatePost, 'true')}" >
+                    포스트가 업데이트 되었습니다.
+                </div>
+            </div>
 
             <div th:each="post:${posts}">
                 <div class="mb-3 border border-3 rounded">

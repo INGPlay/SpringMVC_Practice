@@ -4,19 +4,24 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.*;
+
 @Getter
 @Setter
-public class UpdatePostDTO {
-    private long accountId;
+public class CreatePostForm {
+
+    @Min(1)
     private long containerId;
-    private long postId;
+    @NotEmpty
+    @Size(max = 50)
     private String postTitle;
+
+    @NotEmpty
+    @Size(max = 1000)
     private String postContent;
 
-    public UpdatePostDTO(long accountId, long containerId, long postId, String postTitle, String postContent) {
-        this.accountId = accountId;
+    public CreatePostForm(long containerId, String postTitle, String postContent) {
         this.containerId = containerId;
-        this.postId = postId;
         this.postTitle = postTitle;
         this.postContent = postContent;
     }
