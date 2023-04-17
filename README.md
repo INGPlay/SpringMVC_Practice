@@ -1,3 +1,6 @@
+# 외부접속 링크
+http://faraway.iptime.org/login
+
 # 개요
 - Spring Boot와 데이터베이스를 연동한 CRUD를 구현하는 개인프로젝트
 
