@@ -1,47 +1,68 @@
-# 외부접속 링크
-## [프로젝트 외부접속 링크입니다.](http://faraway.iptime.org:131/login)
+# **Notebook**
+### [프로젝트 외부접속 링크입니다.](http://faraway.iptime.org:131/login)
+
+<br>
 
 # 개요
 - Spring Boot와 데이터베이스를 연동한 CRUD를 구현하는 개인프로젝트
 
+
+- Notion이나 Evernote와 같이 로그인한 사용자가 독립적으로 데이터를 저장할 수 있는 공간을 만들어 보고 싶었음.
+
+<br>
+
 # 목표
-- 평소 사용하고 있던 노트 프로그램인 에버노트와 같이 각 유저에게 개인이 저장소를 나눠 게시글을 CRUD 할 수 있는 공간을 할당할 수 있는 웹 애플리케이션 작성
+>- 평소 사용하고 있던 노트 프로그램인 노션이나 에버노트와 같이 각 유저에게 개인이 저장소를 나눠 게시글을 CRUD 할 수 있는 공간을 할당할 수 있는 웹 애플리케이션 작성  
+
 ![plan](image/../images/willdo_export.png)
 
 # 사용 기술
-## BackEnd
+> ## BackEnd
 - JDK 11
 - Spring Boot v2.7.10
 - MyBatis
 - Spring Security
+- Spring Validation
+- Lombok
 
-## Database
+> ## Database
 - Oracle Database 19c
 
-## FrontEnd
+> ## FrontEnd
 - HTML
 - Thymleaf
 - BootStrap v5.1
 
-## IDE
+> ## IDE
 - IntelliJ IDEA
+
+<br>
 
 # 구조도
 
-## 1. View-Controller 와이어프레임
+> ## 1. View-Controller 와이어프레임
 ![View-Controller](images/Wireframe_export.png)
 
-## 2. 서비스 흐름도
+<br>
+
+> ## 2. 서비스 흐름도
 ![Pages](images/pages.png)
 
-## 3. MVC 계층
+<br>
+
+> ## 3. MVC 계층
 ![MVC3계층](images/MVC3.png)
 - MVC 계층에 따라 URL 루팅을 관리하는 Controller, 비즈니스 로직을 관리하는 Service, DAO를 관리하는 Repository 계층으로 코드를 나누어 진행함.
 
-## 4. DB 구조
+<br>
+
+> ## 4. DB 구조
 ![DB구조](images/tables.png)
 - 계정 정보를 저장하는 ACCOUNT_TBL, 저장소를 저장하는 CONTAINER_TBL, 게시글을 저장하는 POST_TBL을 생성함.
+
 - 각 저장소와 포스트에 독립적인 키를 할당하기 위해 CONTAINER_SEQ_TBL와 POST_SEQ_TBL을 추가적으로 만들어 관리함.
+
+<br>
 
 # 한 것들
 - DB 구성
