@@ -72,7 +72,7 @@
 <summary>상세 내용 확인</summary>
 <div markdown="1">
 
-> ### SecurityFilterChain 을 활용하여 로그인과 로그아웃을 관리함.
+- SecurityFilterChain 을 활용하여 로그인과 로그아웃을 관리함.
 
 ```java
 @Configuration
@@ -102,7 +102,7 @@ public class SpringSecurityConfig {
 [상세 코드](https://github.com/INGPlay/SpringMVC_Practice/blob/main/notebook/src/main/java/com/my/notebook/config/SpringSecurityConfig.java)
 
 
-> ### UserDetailsService를 구현하여 데이터베이스와 연동함.
+- UserDetailsService를 구현하여 데이터베이스와 연동함.
 
 ```Java
 @Component
@@ -134,9 +134,9 @@ public class CustomUserDetailService implements UserDetailsService {
 <summary>상세 내용 확인</summary>
 <div markdown="1">
 
-> ### 가입 검증을 위해 RegisterForm은 다음과 같이 어노테이션과 함께 정규표현식을 사용하였음
-> ### 다른 검증에 대해서도 다음과 같이 적절한 검증 어노테이션을 사용함
-> ### 또한 검증을 사용하는 DTO 모델 이름은 ~Form으로 통일함. 
+- 가입 검증을 위해 RegisterForm은 다음과 같이 어노테이션과 함께 정규표현식을 사용하였음
+- 다른 검증에 대해서도 다음과 같이 적절한 검증 어노테이션을 사용함
+- 또한 검증을 사용하는 DTO 모델 이름은 ~Form으로 통일함. 
 
 ``` java
 @Getter
@@ -167,7 +167,7 @@ public class RegisterForm {
 ```
 [상세 코드](https://github.com/INGPlay/SpringMVC_Practice/blob/main/notebook/src/main/java/com/my/notebook/domain/account/RegisterForm.java)
 
-> ### 어노테이션으로 할 수 없는 검증은 Controller 단에서 처리하였고, BindingResult를 통해 에러메시지를 추가함.
+- 어노테이션으로 할 수 없는 검증은 Controller 단에서 처리하였고, BindingResult를 통해 에러메시지를 추가함.
 
 ```java
 @Slf4j
@@ -212,7 +212,7 @@ public class AccountController {
 ```
 [상세 코드](https://github.com/INGPlay/SpringMVC_Practice/blob/main/notebook/src/main/java/com/my/notebook/controller/AccountController.java)
 
-> ### properties 파일을 사용하여 에러 메시지를 관리하여 수정이 용이하게 함.
+- properties 파일을 사용하여 에러 메시지를 관리하여 수정이 용이하게 함.
 
 ```java
 Size.registerForm.username=유저이름은 {2}자에서 {1}자 길이의 문자로 이루어져야 합니다.
@@ -224,7 +224,7 @@ Size.registerForm.passwordCheck=비밀번호 확인은 {2}자에서 {1}자 길�
 [상세 코드](https://github.com/INGPlay/SpringMVC_Practice/blob/main/notebook/src/main/resources/messages/errorMessages.properties)
 
 
-> ### Thymleaf의 기능을 활용해 사용자의 입력에 대한 검증 메시지를 보여줄 수 있도록 함.
+- Thymleaf의 기능을 활용해 사용자의 입력에 대한 검증 메시지를 보여줄 수 있도록 함.
 
 ```html
 ...
@@ -261,7 +261,7 @@ Size.registerForm.passwordCheck=비밀번호 확인은 {2}자에서 {1}자 길�
 <summary>상세 내용 확인</summary>
 <div markdown="1">
 
-> ### @Mapper 어노테이션과 interface를 사용하여 MyBatis로 DB와 연동하였음.
+- @Mapper 어노테이션과 interface를 사용하여 MyBatis로 DB와 연동하였음.
 
 ```java
 @Mapper
@@ -279,7 +279,7 @@ public interface ContainerMapper {
 [상세 코드](https://github.com/INGPlay/SpringMVC_Practice/blob/main/notebook/src/main/java/com/my/notebook/mapper/ContainerMapper.java)
 
 
-> ### 테스트를 위한 DDL 문 같은 경우는 XML로 따로 관리하였음.
+- 테스트를 위한 DDL 문 같은 경우는 XML로 따로 관리하였음.
 
 ```xml
 
