@@ -64,6 +64,259 @@
 
 <br>
 
+# 기능
+> ## 로그인
+- Spring Security를 활용하여 DB와 연동된 로그인 페이지를 구현함.
+
+<details>
+<summary>상세 내용 확인</summary>
+<div markdown="1">
+
+> ### SecurityFilterChain 을 활용하여 로그인과 로그아웃을 관리함.
+
+```java
+@Configuration
+@EnableWebSecurity
+public class SpringSecurityConfig {
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+        http.
+
+            //...Builder Pattern
+
+        return http.build();
+    }
+
+```
+
+> ### BCryptPasswordEncoder()를 사용하여 Password를 Encoding 함.
+```java
+    @Bean
+    PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
+}
+```
+
+[상세 코드](https://github.com/INGPlay/SpringMVC_Practice/blob/main/notebook/src/main/java/com/my/notebook/config/SpringSecurityConfig.java)
+
+
+> ### UserDetailsService를 구현하여 데이터베이스와 연동함.
+
+```Java
+@Component
+public class CustomUserDetailService implements UserDetailsService {
+   //...
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<EncodedAccountDTO> accountOptional = accountService.selectEncodedPasswordByUsername(username);
+        EncodedAccountDTO account = accountOptional.orElseThrow(
+                ()-> new UsernameNotFoundException("없는 회원입니다.")
+        );
+
+        //...
+    }
+}
+```
+[상세 코드](https://github.com/INGPlay/SpringMVC_Practice/blob/main/notebook/src/main/java/com/my/notebook/config/CustomUserDetailService.java)
+
+</div>
+</details>
+
+<br>
+
+> ## Controller : 검증 (Validation)
+- Validation 어노테이션과 BindingResult를 활용하여 백엔드 데이터 검증을 실시함
+- Thymeleaf의 기능을 활용해 사용자에게 즉각적인 피드백을 줄 수 있음.
+<details>
+<summary>상세 내용 확인</summary>
+<div markdown="1">
+
+> ### 가입 검증을 위해 RegisterForm은 다음과 같이 어노테이션과 함께 정규표현식을 사용하였음
+> ### 다른 검증에 대해서도 다음과 같이 적절한 검증 어노테이션을 사용함
+> ### 또한 검증을 사용하는 DTO 모델 이름은 ~Form으로 통일함. 
+
+``` java
+@Getter
+@Setter
+public class RegisterForm {
+
+    // ...
+
+    /**'
+     * @Range를 Pattern에서 정규표현식으로 빼고 길이 제한을 할 수도 있지만
+     * 길이 에러 메시지와 패턴 메시지를 따로 주기 위해 다 붙임
+     */
+    @NotNull
+    @Size(min = 4, max = 10)
+    @Pattern(regexp = "^([a-z0-9]*)$")
+    private String username;
+
+    @NotNull
+    @Size(min = 4, max = 20)
+    @Pattern(regexp = "^([A-Za-z0-9!@#$%]*)$")
+    private String password;
+
+    @NotNull
+    @Size(min = 4, max = 20)
+    @Pattern(regexp = "^([A-Za-z0-9!@#$%]*)$")
+    private String passwordCheck;
+}
+```
+[상세 코드](https://github.com/INGPlay/SpringMVC_Practice/blob/main/notebook/src/main/java/com/my/notebook/domain/account/RegisterForm.java)
+
+> ### 어노테이션으로 할 수 없는 검증은 Controller 단에서 처리하였고, BindingResult를 통해 에러메시지를 추가함.
+
+```java
+@Slf4j
+@Controller
+@RequestMapping("/login")
+public class AccountController {
+   
+   //...
+
+    @PostMapping("/register")
+    public String register(@Validated @ModelAttribute("registerForm") RegisterForm registerForm,
+                           BindingResult bindingResult,
+                           RedirectAttributes redirectAttributes){
+        log.info("errors = {}", bindingResult);
+
+        // Validation
+        if (!registerForm.getPassword().equals(registerForm.getPasswordCheck())){
+            bindingResult.reject("passwordCheck", null, "비밀번호 확인이 맞지 않습니다.");
+            return "login/registerForm";
+        }
+
+        if (bindingResult.hasErrors()){
+            return "login/registerForm";
+        }
+
+        // Service
+        LoginDTO loginDTO = new LoginDTO(registerForm.getUsername(), registerForm.getPassword());
+        String registerMessage = accountService.register(loginDTO);
+
+        // Looting
+        // 쿼리 스트링 추가
+        redirectAttributes.addAttribute("registerMessage", registerMessage);
+
+        if (registerMessage.equals("ok")){
+            return "redirect:/login";
+        } else {
+            bindingResult.reject("serviceError", null, registerMessage);
+            return "login/registerForm";
+        }
+    }
+}
+```
+[상세 코드](https://github.com/INGPlay/SpringMVC_Practice/blob/main/notebook/src/main/java/com/my/notebook/controller/AccountController.java)
+
+> ### properties 파일을 사용하여 에러 메시지를 관리하여 수정이 용이하게 함.
+
+```java
+Size.registerForm.username=유저이름은 {2}자에서 {1}자 길이의 문자로 이루어져야 합니다.
+Size.registerForm.password=비밀번호는 {2}자에서 {1}자 길이의 문자로 이루어져야 합니다.
+Size.registerForm.passwordCheck=비밀번호 확인은 {2}자에서 {1}자 길이의 문자로 이루어져야 합니다.
+
+...
+```
+[상세 코드](https://github.com/INGPlay/SpringMVC_Practice/blob/main/notebook/src/main/resources/messages/errorMessages.properties)
+
+
+> ### Thymleaf의 기능을 활용해 사용자의 입력에 대한 검증 메시지를 보여줄 수 있도록 함.
+
+```html
+...
+
+            <form th:action method="post" th:object="${registerForm}">
+
+                <div th:if="${#fields.hasGlobalErrors()}">
+                    <p class="text-danger" th:each="e : ${#fields.globalErrors()}" th:text="${e}"></p>
+                </div>
+
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name = "username" aria-describedby="username"
+                           th:field="*{username}" th:errorclass="border-danger">
+
+                    <div class="form-text" th:errors="*{username}" >아이디를 입력하세요</div>
+                </div>
+
+                ...
+
+            </form>
+
+
+...
+```
+
+</div>
+</details>
+
+<br>
+
+> ## Repository : DB 연동
+<details>
+<summary>상세 내용 확인</summary>
+<div markdown="1">
+
+> ### @Mapper 어노테이션과 interface를 사용하여 MyBatis로 DB와 연동하였음.
+
+```java
+@Mapper
+public interface ContainerMapper {
+    @Insert("insert into CONTAINER_TBL (a_id, c_id, c_title)\n" +
+            "VALUES (${accountId}, (select C_id_seq from CONTAINER_seq_tbl where a_id=${accountId}), #{containerTitle})")
+    void insertContainer(CreateContainerDTO createContainerDTO);
+
+    // ...
+
+}
+
+```
+
+[상세 코드](https://github.com/INGPlay/SpringMVC_Practice/blob/main/notebook/src/main/java/com/my/notebook/mapper/ContainerMapper.java)
+
+
+> ### 테스트를 위한 DDL 문 같은 경우는 XML로 따로 관리하였음.
+
+```xml
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.my.notebook.mapper.seq.AccountSeqMapper">
+
+    <select id="getAccountIdSeqCurrval" resultType="_long">
+        SELECT a_id_seq.currval FROM dual
+    </select>
+
+    <select id="createAccountIdSeq">
+        CREATE SEQUENCE a_id_seq
+            START WITH 1
+            INCREMENT BY 1
+            MINVALUE 1
+            NOCYCLE
+    </select>
+
+    <select id="dropAccountIdSeq">
+        BEGIN
+            EXECUTE IMMEDIATE 'DROP SEQUENCE ' || 'a_id_seq';
+        EXCEPTION
+            WHEN OTHERS THEN
+                IF SQLCODE != -2289 THEN
+                    RAISE;
+            END IF;
+        END;
+    </select>
+
+</mapper>
+
+```
+
+</div>
+</details>
+
 # 한 것들
 - DB 구성
 - CRUD 코드 작성
