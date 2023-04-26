@@ -89,6 +89,7 @@ public class SpringSecurityConfig {
     }
 
 ```
+[SpringSecurityConfig.java](https://github.com/INGPlay/SpringMVC_Practice/blob/main/notebook/src/main/java/com/my/notebook/config/SpringSecurityConfig.java)
 
 > ### BCryptPasswordEncoder()를 사용하여 Password를 Encoding 함.
 ```java
@@ -99,7 +100,7 @@ public class SpringSecurityConfig {
 }
 ```
 
-[상세 코드](https://github.com/INGPlay/SpringMVC_Practice/blob/main/notebook/src/main/java/com/my/notebook/config/SpringSecurityConfig.java)
+[SpringSecurityConfig.java](https://github.com/INGPlay/SpringMVC_Practice/blob/main/notebook/src/main/java/com/my/notebook/config/SpringSecurityConfig.java)
 
 
 - UserDetailsService를 구현하여 데이터베이스와 연동함.
@@ -120,7 +121,7 @@ public class CustomUserDetailService implements UserDetailsService {
     }
 }
 ```
-[상세 코드](https://github.com/INGPlay/SpringMVC_Practice/blob/main/notebook/src/main/java/com/my/notebook/config/CustomUserDetailService.java)
+[CustomUserDetailService.java](https://github.com/INGPlay/SpringMVC_Practice/blob/main/notebook/src/main/java/com/my/notebook/config/CustomUserDetailService.java)
 
 </div>
 </details>
@@ -165,7 +166,7 @@ public class RegisterForm {
     private String passwordCheck;
 }
 ```
-[상세 코드](https://github.com/INGPlay/SpringMVC_Practice/blob/main/notebook/src/main/java/com/my/notebook/domain/account/RegisterForm.java)
+[RegisterForm.java](https://github.com/INGPlay/SpringMVC_Practice/blob/main/notebook/src/main/java/com/my/notebook/domain/account/RegisterForm.java)
 
 - 어노테이션으로 할 수 없는 검증은 Controller 단에서 처리하였고, BindingResult를 통해 에러메시지를 추가함.
 
@@ -210,7 +211,7 @@ public class AccountController {
     }
 }
 ```
-[상세 코드](https://github.com/INGPlay/SpringMVC_Practice/blob/main/notebook/src/main/java/com/my/notebook/controller/AccountController.java)
+[AccountController.java](https://github.com/INGPlay/SpringMVC_Practice/blob/main/notebook/src/main/java/com/my/notebook/controller/AccountController.java)
 
 - properties 파일을 사용하여 에러 메시지를 관리하여 수정이 용이하게 함.
 
@@ -221,7 +222,7 @@ Size.registerForm.passwordCheck=비밀번호 확인은 {2}자에서 {1}자 길�
 
 ...
 ```
-[상세 코드](https://github.com/INGPlay/SpringMVC_Practice/blob/main/notebook/src/main/resources/messages/errorMessages.properties)
+[errorMessages.properties](https://github.com/INGPlay/SpringMVC_Practice/blob/main/notebook/src/main/resources/messages/errorMessages.properties)
 
 
 - Thymleaf의 기능을 활용해 사용자의 입력에 대한 검증 메시지를 보여줄 수 있도록 함.
@@ -250,6 +251,8 @@ Size.registerForm.passwordCheck=비밀번호 확인은 {2}자에서 {1}자 길�
 
 ...
 ```
+[registerForm.html](https://github.com/INGPlay/SpringMVC_Practice/blob/main/notebook/src/main/resources/templates/login/registerForm.html)
+
 
 </div>
 </details>
@@ -276,7 +279,7 @@ public interface ContainerMapper {
 
 ```
 
-[상세 코드](https://github.com/INGPlay/SpringMVC_Practice/blob/main/notebook/src/main/java/com/my/notebook/mapper/ContainerMapper.java)
+[ContainerMapper.java](https://github.com/INGPlay/SpringMVC_Practice/blob/main/notebook/src/main/java/com/my/notebook/mapper/ContainerMapper.java)
 
 
 - 테스트를 위한 DDL 문 같은 경우는 XML로 따로 관리하였음.
@@ -313,6 +316,7 @@ public interface ContainerMapper {
 </mapper>
 
 ```
+[AccountSeqMapper.xml](https://github.com/INGPlay/SpringMVC_Practice/blob/main/notebook/src/main/resources/mapper/AccountSeqMapper.xml)
 
 </div>
 </details>
