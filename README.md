@@ -1,5 +1,4 @@
 # **Notebook**
-### [프로젝트 외부접속 링크입니다.](http://faraway.iptime.org:131/login)
 
 <br>
 
