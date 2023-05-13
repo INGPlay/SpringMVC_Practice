@@ -44,7 +44,7 @@ public class CustomUserDetailService implements UserDetailsService {
         Collection authorities = new ArrayList<>();
 
         if (account.getA_isAdmin().equals("1")){
-            authorities.add(new SimpleGrantedAuthority("ADMIN"));
+            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
         } else if (account.getA_isAdmin().equals("0")) {
             authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
         } else {
